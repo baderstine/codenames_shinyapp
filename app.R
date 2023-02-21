@@ -143,13 +143,13 @@ ui <- fluidPage(
                  The number is the number of words on the board that are related to the clue word (and the number of guesses allowed).
                  Turn ends when the team members (a) uncover the wrong team's word, (b) uncover a neutral word, 
                  (c) pass, (d) exhaust their number of guesses.")
-      )# ,
-      # tabPanel(title = "Debug",
-      #          fluidRow(
-      #            verbatimTextOutput("global_board_state"),
-      #            verbatimTextOutput("session_info")
-      #          )
-      # )
+      ),
+      tabPanel(title = "Debug",
+               fluidRow(
+                 # verbatimTextOutput("global_board_state"),
+                 verbatimTextOutput("session_info")
+               )
+      )
     ),
     
     hr(),
@@ -192,15 +192,27 @@ server <- function(input, output, session) {
   gameboard_link_text = reactive({
     if(!is.null(gameboard_key())) {
       # we have a board! 
-      # print(paste0("Board ID: ", lv$key))
-      paste0(session$clientData$url_protocol, 
-             session$clientData$url_pathname,
-             session$clientData$url_pathname,
-             session$clientData$url_hostname, ":",
-             session$clientData$url_port,
-             session$clientData$url_pathname, 
-             "?board_id=",gameboard_key())
+      
+      if (session$clientData$url_hostname == "127.0.0.1") {
+        # localhost version:
+        paste0(session$clientData$url_protocol,       # http:
+               session$clientData$url_pathname,       # /
+               session$clientData$url_pathname,       # /
+               session$clientData$url_hostname, ":",  # 127.0.0.1:
+               session$clientData$url_port,           # 1234
+               session$clientData$url_pathname,       # /
+               "?board_id=",gameboard_key())
+      } else {
+        # shinyapps.io version
+        paste0(session$clientData$url_protocol, "//", # https://
+               session$clientData$url_hostname, # baderstine.shinyapps.io
+               # session$clientData$url_port,
+               session$clientData$url_pathname, # /codenames_shinyapp/
+               "?board_id=",gameboard_key())
+      }
+      
     }
+    
   })
                                       
   
@@ -284,9 +296,9 @@ server <- function(input, output, session) {
     paste(allvalues, collapse = "\n")
   })
   
-  output$global_board_state <- renderText({
-    print(paste0("keys:", names(gv)))
-  })
+  # output$global_board_state <- renderText({
+  #   print(paste0("keys:", names(gv)))
+  # })
   
   
   # In-Game Event Handlers ----
