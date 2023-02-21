@@ -143,13 +143,13 @@ ui <- fluidPage(
                  The number is the number of words on the board that are related to the clue word (and the number of guesses allowed).
                  Turn ends when the team members (a) uncover the wrong team's word, (b) uncover a neutral word, 
                  (c) pass, (d) exhaust their number of guesses.")
-      ),
-      tabPanel(title = "Debug",
-               fluidRow(
-                 # verbatimTextOutput("global_board_state"),
-                 verbatimTextOutput("session_info")
-               )
-      )
+      ) # ,
+      # tabPanel(title = "Debug",
+      #          fluidRow(
+      #            # verbatimTextOutput("global_board_state"),
+      #            verbatimTextOutput("session_info")
+      #          )
+      # )
     ),
     
     hr(),
@@ -210,9 +210,7 @@ server <- function(input, output, session) {
                session$clientData$url_pathname, # /codenames_shinyapp/
                "?board_id=",gameboard_key())
       }
-      
     }
-    
   })
                                       
   
@@ -288,13 +286,13 @@ server <- function(input, output, session) {
   
   
   # Session Info (for testing/debugging) ----
-  output$session_info <- renderText({
-    cdata <- session$clientData
-    allvalues <- lapply(names(cdata), function(name) {
-      paste(name, cdata[[name]], sep = " = ")
-    })
-    paste(allvalues, collapse = "\n")
-  })
+  # output$session_info <- renderText({
+  #   cdata <- session$clientData
+  #   allvalues <- lapply(names(cdata), function(name) {
+  #     paste(name, cdata[[name]], sep = " = ")
+  #   })
+  #   paste(allvalues, collapse = "\n")
+  # })
   
   # output$global_board_state <- renderText({
   #   print(paste0("keys:", names(gv)))
